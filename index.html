@@ -1,0 +1,2012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Cooperative Service Marketplace – Worker App</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- App Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Desktop Presentation Wrapper & Toolbar -->
+  <div class="device-wrapper">
+    <div class="device-header-bar">
+      <div class="badge-pill">
+        <span class="badge-dot"></span>
+        <span>Worker Portal • Cooperative Federation</span>
+      </div>
+      <div class="device-controls">
+        <button class="ctrl-btn" id="btn-toggle-fullscreen" title="Toggle Fullscreen View">
+          <i data-lucide="maximize-2" style="width: 12px; height: 12px;"></i> View Mode
+        </button>
+        <button class="ctrl-btn" id="btn-reset-demo" title="Reset Demo">
+          <i data-lucide="rotate-ccw" style="width: 12px; height: 12px;"></i> Restart
+        </button>
+      </div>
+    </div>
+
+    <!-- Connected Customer Booking Simulation Bar -->
+    <div class="sim-toolbar" id="sim-toolbar" style="width: 100%; margin: 0 0 10px;">
+      <div class="sim-toolbar-top">
+        <span><i data-lucide="radio" style="width: 12px; height: 12px; vertical-align: middle;"></i> Customer App Connected</span>
+        <span style="color: #60A5FA;">1-Tap Test Dispatch:</span>
+      </div>
+      <div class="sim-btn-group">
+        <button class="sim-btn instant" id="btn-sim-instant" title="Simulate Customer creating an Instant Service booking">
+          <i data-lucide="zap" style="width: 12px; height: 12px;"></i> Instant
+        </button>
+        <button class="sim-btn prebook" id="btn-sim-prebook" title="Simulate Customer creating a Pre-Booking for future slot">
+          <i data-lucide="calendar" style="width: 12px; height: 12px;"></i> Pre-Book
+        </button>
+        <button class="sim-btn emergency" id="btn-sim-emergency" title="Simulate Customer triggering Emergency SOS">
+          <i data-lucide="siren" style="width: 12px; height: 12px;"></i> Emergency
+        </button>
+        <button class="sim-btn" style="background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="window.workerApp.openJobDetails('CP-9104', 'INSTANT')" title="Open Part 3 Job Details Screen directly">
+          <i data-lucide="file-text" style="width: 12px; height: 12px;"></i> Details
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Screen Frame -->
+    <main class="mobile-screen" id="app-container">
+      
+      <!-- iOS-style Dynamic Status Bar -->
+      <header class="status-bar" id="mobile-status-bar">
+        <span id="current-clock-time">09:41</span>
+        <div class="status-notch">
+          <div class="notch-camera"></div>
+        </div>
+        <div class="status-icons">
+          <i data-lucide="signal" style="width: 13px; height: 13px;"></i>
+          <i data-lucide="wifi" style="width: 13px; height: 13px;"></i>
+          <i data-lucide="battery-charging" style="width: 15px; height: 15px;"></i>
+        </div>
+      </header>
+
+      <!-- Global Toast Alert -->
+      <div class="toast-notice" id="global-toast">
+        <i data-lucide="check-circle" id="toast-icon" style="width: 18px; height: 18px;"></i>
+        <span id="toast-message">Notification message</span>
+      </div>
+
+      <!-- ==============================================================
+           SCREEN 1: WORKER WELCOME / LANDING
+           ============================================================== -->
+      <section class="screen-view active" id="screen-welcome">
+        <div>
+          <div class="welcome-logo-wrap">
+            <span class="worker-badge-tag">
+              <i data-lucide="shield-check" style="width: 13px; height: 13px;"></i>
+              Cooperative Worker Guild Portal
+            </span>
+            <h1 class="welcome-title">Empower Your Craft.<br><span>Own Your Work.</span></h1>
+            <p class="welcome-subtitle">Direct customer requests, 0% platform deduction, and 100% member-owned collective security.</p>
+          </div>
+
+          <div class="benefits-card">
+            <div class="benefit-row">
+              <div class="benefit-icon green">
+                <i data-lucide="percent" style="width: 18px; height: 18px;"></i>
+              </div>
+              <div class="benefit-text">
+                <h4>0% Middleman Commission</h4>
+                <p>100% of fair customer pricing goes directly to you, plus annual cooperative dividend shares.</p>
+              </div>
+            </div>
+            <div class="benefit-row">
+              <div class="benefit-icon blue">
+                <i data-lucide="radio" style="width: 18px; height: 18px;"></i>
+              </div>
+              <div class="benefit-text">
+                <h4>Instant Dispatch & Emergency SOS</h4>
+                <p>Receive live nearby jobs and guaranteed surge rates on emergency community requests.</p>
+              </div>
+            </div>
+            <div class="benefit-row">
+              <div class="benefit-icon amber">
+                <i data-lucide="award" style="width: 18px; height: 18px;"></i>
+              </div>
+              <div class="benefit-text">
+                <h4>Verified Guild Certification</h4>
+                <p>Earn trusted cooperative badges and build lifelong clientele in your local neighborhood.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 14px;">
+          <button class="btn-primary" id="btn-welcome-register">
+            <span>Register as Co-op Worker</span>
+            <i data-lucide="user-plus" style="width: 18px; height: 18px;"></i>
+          </button>
+          <button class="btn-secondary" id="btn-welcome-login">
+            <span>Existing Member Login</span>
+            <i data-lucide="log-in" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           SCREEN 2: WORKER REGISTRATION
+           ============================================================== -->
+      <section class="screen-view" id="screen-registration">
+        <header class="form-screen-header">
+          <button class="back-btn" id="btn-reg-back">
+            <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+          </button>
+          <div class="form-screen-title">
+            <h2>Worker Registration</h2>
+            <p>Join the Verified Co-op Guild</p>
+          </div>
+        </header>
+
+        <form class="registration-content" id="form-worker-registration" onsubmit="return false;">
+          <!-- 1. Profile Photo & Basic Identity -->
+          <div class="form-card">
+            <div class="form-section-header">
+              <i data-lucide="user" style="width: 16px; height: 16px; color: var(--primary-blue);"></i>
+              <span>Personal Details</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Profile Photo <span class="req">*</span></label>
+              <div class="avatar-upload-row">
+                <div class="avatar-preview-box" id="avatar-preview-container" title="Click to choose sample photo">
+                  <img id="avatar-preview-img" src="" alt="Profile Preview" style="display: none;">
+                  <div class="avatar-preview-placeholder" id="avatar-placeholder">
+                    <i data-lucide="camera" style="width: 24px; height: 24px;"></i>
+                    <span style="font-size: 10px; margin-top: 4px; font-weight: 700;">Upload</span>
+                  </div>
+                </div>
+                <div class="avatar-upload-actions">
+                  <h4>Clear Face Photograph</h4>
+                  <p>Helps customers recognize you upon arrival</p>
+                  <label class="upload-chip-btn">
+                    <i data-lucide="upload" style="width: 12px; height: 12px;"></i>
+                    <span>Select Photo</span>
+                    <input type="file" id="input-profile-photo" accept="image/*" style="display: none;">
+                  </label>
+                  <button type="button" class="upload-chip-btn" id="btn-sample-avatar" style="margin-left: 4px;">
+                    <i data-lucide="sparkles" style="width: 12px; height: 12px;"></i> Demo
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-worker-name">Full Worker Name <span class="req">*</span></label>
+              <div class="input-with-icon">
+                <i data-lucide="user"></i>
+                <input type="text" id="reg-worker-name" class="form-input" placeholder="e.g. Ramesh Kumar" required value="Ramesh Kumar">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-mobile-number">Mobile Number <span class="req">*</span></label>
+              <div class="phone-prefix-wrap">
+                <span class="phone-prefix">+91</span>
+                <div class="input-with-icon" style="flex: 1;">
+                  <i data-lucide="phone"></i>
+                  <input type="tel" id="reg-mobile-number" class="form-input" placeholder="98450 40201" maxlength="10" required value="9845040201">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-email">Email Address <span class="req">*</span></label>
+              <div class="input-with-icon">
+                <i data-lucide="mail"></i>
+                <input type="email" id="reg-email" class="form-input" placeholder="ramesh.plumbing@coopguild.org" required value="ramesh.kumar@coopguild.org">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-address">Residential Address <span class="req">*</span></label>
+              <div class="input-with-icon">
+                <i data-lucide="map-pin"></i>
+                <input type="text" id="reg-address" class="form-input" placeholder="House #, Street, Neighborhood" required value="#42, 6th Cross, Indiranagar, Bengaluru">
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Skills & Trade Experience -->
+          <div class="form-card">
+            <div class="form-section-header">
+              <i data-lucide="wrench" style="width: 16px; height: 16px; color: var(--primary-green);"></i>
+              <span>Skill Category & Experience</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Primary Skill Category <span class="req">*</span></label>
+              <div class="skills-grid" id="skills-selection-grid">
+                <div class="skill-chip selected" data-skill="Plumbing">
+                  <div class="skill-chip-icon"><i data-lucide="wrench" style="width: 16px; height: 16px;"></i></div>
+                  <span>Plumbing</span>
+                </div>
+                <div class="skill-chip" data-skill="Electrical">
+                  <div class="skill-chip-icon"><i data-lucide="zap" style="width: 16px; height: 16px;"></i></div>
+                  <span>Electrical</span>
+                </div>
+                <div class="skill-chip" data-skill="Carpentry">
+                  <div class="skill-chip-icon"><i data-lucide="hammer" style="width: 16px; height: 16px;"></i></div>
+                  <span>Carpentry</span>
+                </div>
+                <div class="skill-chip" data-skill="Painting">
+                  <div class="skill-chip-icon"><i data-lucide="paint-bucket" style="width: 16px; height: 16px;"></i></div>
+                  <span>Painting</span>
+                </div>
+                <div class="skill-chip" data-skill="Cleaning">
+                  <div class="skill-chip-icon"><i data-lucide="sparkles" style="width: 16px; height: 16px;"></i></div>
+                  <span>Cleaning</span>
+                </div>
+                <div class="skill-chip" data-skill="Appliance Repair">
+                  <div class="skill-chip-icon"><i data-lucide="tv-2" style="width: 16px; height: 16px;"></i></div>
+                  <span>Appliance Repair</span>
+                </div>
+                <div class="skill-chip" data-skill="Other Services" style="grid-column: span 2;">
+                  <div class="skill-chip-icon"><i data-lucide="layout-grid" style="width: 16px; height: 16px;"></i></div>
+                  <span>Other Services (Locksmith, Masonry, Pest)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-experience">Years of Experience <span class="req">*</span></label>
+              <select id="reg-experience" class="form-select no-icon" required>
+                <option value="1-2 years">1 – 2 Years (Junior Artisan)</option>
+                <option value="3-5 years">3 – 5 Years (Journeyman)</option>
+                <option value="6-10 years" selected>6 – 10 Years (Master Craftsman)</option>
+                <option value="10+ years">10+ Years (Senior Guild Specialist)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-service-area">Primary Service Area <span class="req">*</span></label>
+              <select id="reg-service-area" class="form-select no-icon" required>
+                <option value="Indiranagar & Domlur" selected>Indiranagar & Domlur (Sector 1)</option>
+                <option value="Koramangala & HSR">Koramangala & HSR Layout (Sector 2)</option>
+                <option value="Whitefield & Marathahalli">Whitefield & Marathahalli (Sector 3)</option>
+                <option value="Jayanagar & JP Nagar">Jayanagar & JP Nagar (Sector 4)</option>
+                <option value="Central Bengaluru">Central Bengaluru (MG Rd, Shivajinagar)</option>
+                <option value="All Bengaluru Sectors">All Bengaluru Sectors (Rapid Response)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 3. ID Proof & Document Verification -->
+          <div class="form-card">
+            <div class="form-section-header">
+              <i data-lucide="file-check" style="width: 16px; height: 16px; color: var(--accent-amber);"></i>
+              <span>Identity & Certification Proof</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Government ID Proof / Trade Certificate <span class="req">*</span></label>
+              <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">Aadhaar Card, Voter ID, or Govt Skill Development Certificate (NCVT/ITI)</p>
+              
+              <div class="doc-dropzone" id="doc-dropzone-box">
+                <i data-lucide="upload-cloud" style="width: 32px; height: 32px; color: var(--primary-blue); margin-bottom: 6px;"></i>
+                <h4 style="font-size: 13px; font-weight: 700;">Tap to Upload Document</h4>
+                <p style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Supported: PDF, JPG, PNG (Max 5MB)</p>
+                <input type="file" id="input-id-doc" accept=".pdf,image/*" style="display: none;">
+              </div>
+
+              <!-- Attached Document State Card -->
+              <div class="doc-preview-card" id="doc-preview-card">
+                <div class="doc-preview-left">
+                  <i data-lucide="file-text" style="color: var(--primary-green); width: 20px; height: 20px;"></i>
+                  <div>
+                    <h5 id="doc-file-name" style="font-size: 12px; font-weight: 700;">Aadhaar_Trade_Cert_Ramesh.pdf</h5>
+                    <span style="font-size: 10px; color: var(--primary-green); font-weight: 700;">✓ Ready for Verification</span>
+                  </div>
+                </div>
+                <button type="button" id="btn-remove-doc" style="background: none; border: none; color: var(--accent-red); cursor: pointer;">
+                  <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn-primary" id="btn-submit-registration">
+            <i data-lucide="send" style="width: 18px; height: 18px;"></i>
+            <span>Submit for Verification</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- ==============================================================
+           SCREEN 3: VERIFICATION STATUS (Under Review / Approved / Rejected)
+           ============================================================== -->
+      <section class="screen-view" id="screen-verification">
+        <header class="form-screen-header">
+          <button class="back-btn" id="btn-verif-back">
+            <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+          </button>
+          <div class="form-screen-title">
+            <h2>Account Verification</h2>
+            <p>Cooperative Member Accreditation</p>
+          </div>
+        </header>
+
+        <div style="padding: 16px 20px 32px;">
+          <!-- Interactive Demo State Switcher for Quick Inspection -->
+          <div class="demo-state-bar">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>Interactive Verification Preview:</span>
+              <span style="font-size: 10px; color: #60A5FA;">Switch state below:</span>
+            </div>
+            <div class="demo-pills">
+              <button class="demo-pill-btn active" id="demo-state-review">⏳ Under Review</button>
+              <button class="demo-pill-btn btn-approve" id="demo-state-approved">✓ Approved</button>
+              <button class="demo-pill-btn btn-reject" id="demo-state-rejected">✕ Rejected</button>
+            </div>
+          </div>
+
+          <div class="verification-status-panel">
+            
+            <!-- 1. UNDER REVIEW STATE -->
+            <div class="state-box active" id="state-under-review">
+              <div class="status-badge-hero review">
+                <i data-lucide="clock" style="width: 38px; height: 38px;"></i>
+              </div>
+              <h3 class="status-title">Application Under Review</h3>
+              <p class="status-desc">Thank you for applying to the Worker Cooperative Federation. Your credentials and documents are being vetted by the Sector Guild Committee.</p>
+
+              <!-- Progress Timeline Tracker -->
+              <div class="verification-timeline">
+                <div class="timeline-step">
+                  <div class="step-marker done"><i data-lucide="check" style="width: 14px; height: 14px;"></i></div>
+                  <div class="step-text">
+                    <h5>Application & Documents Submitted</h5>
+                    <p>Details received on 23 Sep 2026, 09:41 AM</p>
+                  </div>
+                </div>
+                <div class="timeline-step">
+                  <div class="step-marker active">2</div>
+                  <div class="step-text">
+                    <h5 style="color: var(--accent-amber);">Sector Committee Audit</h5>
+                    <p>Verifying Govt ID and Trade qualifications</p>
+                  </div>
+                </div>
+                <div class="timeline-step">
+                  <div class="step-marker pending">3</div>
+                  <div class="step-text">
+                    <h5>Peer Guild Skill Endorsement</h5>
+                    <p>Co-op Member Board sign-off</p>
+                  </div>
+                </div>
+                <div class="timeline-step">
+                  <div class="step-marker pending">4</div>
+                  <div class="step-text">
+                    <h5>Digital Co-op Badge Issued</h5>
+                    <p>Full marketplace access & booking dispatch</p>
+                  </div>
+                </div>
+              </div>
+
+              <div style="background: var(--bg-muted); padding: 12px; border-radius: var(--radius-md); font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">
+                <i data-lucide="info" style="width: 14px; height: 14px; vertical-align: middle; color: var(--primary-blue);"></i>
+                Average turnaround time: <strong>2 – 4 hours</strong>. You will receive an SMS alert once approved.
+              </div>
+
+              <button class="btn-secondary" id="btn-simulate-approval">
+                <i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--primary-green);"></i>
+                <span>Simulate Instant Approval</span>
+              </button>
+            </div>
+
+            <!-- 2. APPROVED STATE -->
+            <div class="state-box" id="state-approved">
+              <div class="status-badge-hero approved">
+                <i data-lucide="shield-check" style="width: 40px; height: 40px;"></i>
+              </div>
+              <h3 class="status-title" style="color: var(--primary-green);">Your account has been approved</h3>
+              <p class="status-desc">Welcome to the Cooperative Service Federation! You have been certified as an official Member Craftsman.</p>
+
+              <!-- Co-op Digital Member ID Card -->
+              <div class="member-id-card">
+                <div class="member-card-header">
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+                    <span style="font-size: 12px; font-weight: 800;">CO-OP FEDERATION</span>
+                  </div>
+                  <span class="member-badge-pill">MEMBER ID #402</span>
+                </div>
+                <div class="member-card-body">
+                  <img src="https://images.unsplash.com/photo-1540569014015-19a7be504e3a?w=150&auto=format&fit=crop&q=80" alt="Worker Avatar" class="member-avatar" id="approved-worker-avatar">
+                  <div class="member-info">
+                    <h4 id="approved-worker-name">Ramesh Kumar</h4>
+                    <p id="approved-worker-role">Master Plumber & Pipe Specialist</p>
+                    <p style="font-size: 11px; opacity: 0.8; margin-top: 4px;">Sector: Indiranagar 100ft Rd</p>
+                  </div>
+                </div>
+              </div>
+
+              <button class="btn-primary" id="btn-verif-create-login">
+                <span>Create Login</span>
+                <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+              </button>
+            </div>
+
+            <!-- 3. REJECTED STATE -->
+            <div class="state-box" id="state-rejected">
+              <div class="status-badge-hero rejected">
+                <i data-lucide="alert-octagon" style="width: 40px; height: 40px;"></i>
+              </div>
+              <h3 class="status-title" style="color: var(--accent-red);">Application Needs Clarification</h3>
+              <p class="status-desc">The guild review committee could not verify your documents due to the following reason:</p>
+
+              <div style="background: var(--accent-red-light); border: 1.5px solid var(--accent-red-subtle); padding: 14px; border-radius: var(--radius-md); text-align: left; margin-bottom: 20px;">
+                <h5 style="color: var(--accent-red); font-size: 13px; font-weight: 700; margin-bottom: 4px;">Reason for Rejection:</h5>
+                <p style="font-size: 12px; color: #991B1B;">The uploaded Government ID was partially blurred and the trade certification serial number could not be validated. Please upload a high-resolution scan.</p>
+              </div>
+
+              <button class="btn-primary" id="btn-resubmit-application">
+                <i data-lucide="refresh-cw" style="width: 16px; height: 16px;"></i>
+                <span>Update & Resubmit</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           SCREEN 4: WORKER LOGIN
+           ============================================================== -->
+      <section class="screen-view" id="screen-login">
+        <header class="form-screen-header">
+          <button class="back-btn" id="btn-login-back">
+            <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+          </button>
+          <div class="form-screen-title">
+            <h2>Worker Login</h2>
+            <p>Access your co-op dispatch terminal</p>
+          </div>
+        </header>
+
+        <div style="padding: 16px 20px 32px;">
+          <!-- Quick Autofill Helpers -->
+          <div class="autofill-section">
+            <div class="autofill-header">
+              <span>Quick Demo Sign In:</span>
+              <span>1-Tap Fill</span>
+            </div>
+            <div class="autofill-chips">
+              <button class="autofill-chip-btn" id="autofill-ramesh">🔧 Ramesh (Plumbing #402)</button>
+              <button class="autofill-chip-btn" id="autofill-suresh">⚡ Suresh (Electrical #315)</button>
+              <button class="autofill-chip-btn" id="autofill-vikram">🚨 Vikram (Emergency #108)</button>
+            </div>
+          </div>
+
+          <form id="form-worker-login" onsubmit="return false;" style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="form-group">
+              <label class="form-label" for="login-username">Mobile / Username <span class="req">*</span></label>
+              <div class="input-with-icon">
+                <i data-lucide="user-check"></i>
+                <input type="text" id="login-username" class="form-input" placeholder="Mobile Number or Member ID" required value="9845040201">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label class="form-label" for="login-password" style="margin-bottom: 0;">Password <span class="req">*</span></label>
+                <span class="forgot-link" id="btn-forgot-password">Forgot Password?</span>
+              </div>
+              <div class="input-with-icon">
+                <i data-lucide="lock"></i>
+                <input type="password" id="login-password" class="form-input" placeholder="Enter your password" required value="coop1234">
+                <button type="button" id="btn-toggle-pwd" style="position: absolute; right: 12px; background: none; border: none; color: var(--text-subtle); cursor: pointer;">
+                  <i data-lucide="eye" id="pwd-eye-icon" style="width: 16px; height: 16px;"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="btn-submit-login" style="margin-top: 10px;">
+              <span>Login</span>
+              <i data-lucide="log-in" style="width: 18px; height: 18px;"></i>
+            </button>
+
+            <div style="text-align: center; margin-top: 14px;">
+              <span style="font-size: 13px; color: var(--text-muted);">Not registered yet? </span>
+              <span class="forgot-link" id="link-goto-register">Register for Guild Membership</span>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           SCREEN 5: WORKER DASHBOARD (Main App Container)
+           ============================================================== -->
+      <section class="screen-view" id="screen-dashboard">
+        
+        <!-- Top Sticky Header -->
+        <header class="dashboard-top-header">
+          <div class="worker-profile-summary">
+            <div class="worker-avatar-badge">
+              <img id="dash-worker-avatar" src="https://images.unsplash.com/photo-1540569014015-19a7be504e3a?w=150&auto=format&fit=crop&q=80" alt="Worker">
+              <span class="worker-status-dot" id="dash-status-dot"></span>
+            </div>
+            <div class="worker-text-info">
+              <h3 id="dash-worker-name">
+                <span>Ramesh Kumar</span>
+              </h3>
+              <div class="worker-coop-pill" id="dash-worker-badge">
+                <i data-lucide="shield-check" style="width: 12px; height: 12px;"></i>
+                <span>Verified Co-op Member #402</span>
+              </div>
+            </div>
+          </div>
+          <button class="header-action-btn" id="btn-worker-notifs" title="Notifications">
+            <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+            <span class="notif-badge-indicator"></span>
+          </button>
+        </header>
+
+        <!-- TAB 1: HOME (Active Dashboard) -->
+        <div class="tab-content-view active" id="tab-home">
+          
+          <!-- MAIN TOGGLE: "AVAILABLE FOR JOBS" -->
+          <div class="availability-control-card online" id="availability-card">
+            <div class="availability-row">
+              <div class="availability-info">
+                <h4>AVAILABLE FOR JOBS</h4>
+                <p class="online-text" id="availability-status-text">
+                  <span class="live-radar-dot"></span>
+                  <span>ONLINE • Receiving Customer Requests</span>
+                </p>
+              </div>
+              <label class="switch-wrap">
+                <input type="checkbox" id="toggle-availability" checked>
+                <span class="slider-switch"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Offline Warning Notice (Shown when toggle is OFF) -->
+          <div class="offline-banner" id="offline-banner">
+            <i data-lucide="alert-triangle" style="width: 18px; height: 18px; flex-shrink: 0; color: #D97706;"></i>
+            <span>You are currently <strong>OFFLINE</strong>. Turn ON availability to receive new customer bookings and emergency dispatches.</span>
+          </div>
+
+          <!-- TODAY'S EARNINGS SUMMARY -->
+          <div class="earnings-summary-card">
+            <div class="earnings-card-top">
+              <span class="earnings-label">Today's Earnings</span>
+              <span class="coop-zero-commission-pill">
+                <i data-lucide="check" style="width: 10px; height: 10px;"></i> 0% Fee • 100% Yours
+              </span>
+            </div>
+            <div class="earnings-amount-hero" id="dash-earnings-amount">₹1,240.00</div>
+            <div class="earnings-metrics-row">
+              <div class="metric-item">
+                <h5>Jobs Done</h5>
+                <p id="dash-jobs-count">3 Completed</p>
+              </div>
+              <div class="metric-item">
+                <h5>Co-op Bonus</h5>
+                <p style="color: #6EE7B7;">+₹180 Share</p>
+              </div>
+              <div class="metric-item">
+                <h5>Active Rating</h5>
+                <p>4.9 ★ (384)</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-content-area">
+            
+            <!-- 1. EMERGENCY REQUESTS (SOS DISPATCH) -->
+            <div id="section-emergency-requests">
+              <div class="section-title-row">
+                <h3 style="color: var(--accent-red);">
+                  <i data-lucide="siren" style="width: 18px; height: 18px;"></i>
+                  <span>Emergency Requests</span>
+                </h3>
+                <span class="count-badge red" id="emergency-count-badge">1 Urgent</span>
+              </div>
+
+              <div class="emergency-dispatch-card" id="active-emergency-card">
+                <div class="emergency-tag-header">
+                  <span class="emergency-pill">
+                    <i data-lucide="zap" style="width: 12px; height: 12px;"></i>
+                    CRITICAL SOS DISPATCH
+                  </span>
+                  <span class="emergency-timer">ETA &lt; 15 mins</span>
+                </div>
+                <div class="emergency-body">
+                  <h4>Major Pipe Burst / Ceilings Flood</h4>
+                  <p class="loc">
+                    <i data-lucide="map-pin" style="width: 13px; height: 13px; vertical-align: middle;"></i>
+                    Indiranagar 100ft Rd (1.1 km away) • Deepa Krishnan
+                  </p>
+                </div>
+                <div class="emergency-payout-row">
+                  <div>
+                    <span style="font-size: 11px; color: var(--text-muted); display: block;">Co-op Emergency Rate</span>
+                    <span class="payout-rate">₹599.00 Fixed</span>
+                  </div>
+                  <span style="font-size: 11px; color: var(--accent-red); font-weight: 700;">🚨 Rapid Response Needed</span>
+                </div>
+                <div class="emergency-actions-row">
+                  <button class="btn-danger" id="btn-accept-emergency">
+                    <i data-lucide="check-circle-2" style="width: 16px; height: 16px;"></i>
+                    <span>Accept Emergency</span>
+                  </button>
+                  <button class="btn-outline-danger" id="btn-decline-emergency">
+                    <span>Decline</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. TODAY'S JOBS (Matches Customer App Booking CP-8841) -->
+            <div id="section-todays-jobs">
+              <div class="section-title-row">
+                <h3>
+                  <i data-lucide="calendar" style="width: 18px; height: 18px; color: var(--primary-blue);"></i>
+                  <span>Today's Jobs</span>
+                </h3>
+                <span class="count-badge blue" id="today-jobs-count-badge">2 Scheduled</span>
+              </div>
+
+              <!-- Shared Booking CP-8841 (Customer: P. Vishnu Vardhan) -->
+              <div class="today-job-card" id="job-card-cp8841">
+                <div class="today-job-header">
+                  <div>
+                    <span class="job-status-pill in-progress">
+                      <span class="live-radar-dot" style="width: 6px; height: 6px;"></span>
+                      En Route (ETA 12 mins)
+                    </span>
+                    <h4 style="font-size: 15px; font-weight: 800; margin-top: 6px;">Plumbing Leakage & Pipe Repair</h4>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Job #CP-8841 • Tap & Mixer Leak</p>
+                  </div>
+                  <span style="font-size: 15px; font-weight: 800; color: var(--primary-green);">₹348</span>
+                </div>
+
+                <div class="customer-detail-row">
+                  <div>
+                    <span style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Customer</span>
+                    <h5 class="customer-name-text">P. Vishnu Vardhan</h5>
+                    <p style="font-size: 11px; color: var(--text-muted);">Indiranagar 100ft Rd, Bengaluru</p>
+                  </div>
+                  <button class="btn-secondary" id="btn-call-customer" style="width: auto; padding: 6px 12px; font-size: 12px;">
+                    <i data-lucide="phone" style="width: 14px; height: 14px; color: var(--primary-blue);"></i>
+                    <span>Call</span>
+                  </button>
+                </div>
+
+                <div class="job-actions-grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+                  <button class="btn-job-action" style="background: var(--primary-blue-light); color: var(--primary-blue); border: 1px solid var(--primary-blue-subtle);" onclick="window.workerApp.openJobDetails('CP-8841', 'INSTANT')">
+                    <i data-lucide="file-text" style="width: 14px; height: 14px;"></i>
+                    <span>Job Details</span>
+                  </button>
+                  <button class="btn-job-action nav" id="btn-nav-customer">
+                    <i data-lucide="navigation" style="width: 14px; height: 14px;"></i>
+                    <span>GPS Route</span>
+                  </button>
+                  <button class="btn-job-action complete" id="btn-complete-job-cp8841">
+                    <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i>
+                    <span>Complete</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Second job for later today -->
+              <div class="today-job-card" style="margin-top: 10px; border-left-color: var(--accent-amber);">
+                <div class="today-job-header">
+                  <div>
+                    <span class="job-status-pill scheduled">Scheduled • 02:30 PM</span>
+                    <h4 style="font-size: 14px; font-weight: 800; margin-top: 6px;">Flush Tank Repair & Siphon Check</h4>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Job #CP-8829 • Ananya Sharma</p>
+                  </div>
+                  <span style="font-size: 14px; font-weight: 800; color: var(--primary-green);">₹299</span>
+                </div>
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">
+                  <i data-lucide="map-pin" style="width: 12px; height: 12px; vertical-align: middle;"></i> 12th Main, HAL 2nd Stage (2.4 km away)
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. AVAILABLE JOBS (Marketplace Broadcast Queue) -->
+            <div id="section-available-jobs">
+              <div class="section-title-row">
+                <h3>
+                  <i data-lucide="radio" style="width: 18px; height: 18px; color: var(--primary-green);"></i>
+                  <span>Available Jobs Nearby</span>
+                </h3>
+                <span class="count-badge green" id="avail-jobs-badge">2 Open</span>
+              </div>
+
+              <div id="available-jobs-list" style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Available Job 1 -->
+                <div class="available-job-item" id="job-avail-8850">
+                  <div class="available-job-top">
+                    <div>
+                      <h4>Washbasin Drainage Blockage</h4>
+                      <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Customer: Karthik Reddy • Instant Request</p>
+                    </div>
+                    <span class="distance-badge">0.8 km</span>
+                  </div>
+                  <div class="available-job-meta">
+                    <span><i data-lucide="map-pin" style="width: 12px; height: 12px; vertical-align: middle;"></i> Defense Colony, Indiranagar</span>
+                    <strong style="color: var(--primary-green); font-size: 14px;">₹249</strong>
+                  </div>
+                  <div class="available-job-actions">
+                    <button class="btn-success" onclick="window.workerApp.acceptAvailableJob('8850', 'Washbasin Drainage Blockage', 'Karthik Reddy', 'Defense Colony, Indiranagar', 249)">
+                      <i data-lucide="check" style="width: 14px; height: 14px;"></i>
+                      <span>Accept Job</span>
+                    </button>
+                    <button class="btn-secondary" onclick="window.workerApp.declineAvailableJob('8850')">
+                      <span>Pass</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Available Job 2 -->
+                <div class="available-job-item" id="job-avail-8852">
+                  <div class="available-job-top">
+                    <div>
+                      <h4>Water Pressure Pump Diagnostic</h4>
+                      <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Customer: Meera Nambiar • Instant Request</p>
+                    </div>
+                    <span class="distance-badge">1.9 km</span>
+                  </div>
+                  <div class="available-job-meta">
+                    <span><i data-lucide="map-pin" style="width: 12px; height: 12px; vertical-align: middle;"></i> Domlur 1st Stage</span>
+                    <strong style="color: var(--primary-green); font-size: 14px;">₹449</strong>
+                  </div>
+                  <div class="available-job-actions">
+                    <button class="btn-success" onclick="window.workerApp.acceptAvailableJob('8852', 'Water Pressure Pump Diagnostic', 'Meera Nambiar', 'Domlur 1st Stage', 449)">
+                      <i data-lucide="check" style="width: 14px; height: 14px;"></i>
+                      <span>Accept Job</span>
+                    </button>
+                    <button class="btn-secondary" onclick="window.workerApp.declineAvailableJob('8852')">
+                      <span>Pass</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. UPCOMING JOBS (Future Scheduled) -->
+            <div id="section-upcoming-jobs">
+              <div class="section-title-row">
+                <h3>
+                  <i data-lucide="clock" style="width: 18px; height: 18px; color: var(--text-muted);"></i>
+                  <span>Upcoming Pre-Booked</span>
+                </h3>
+                <span class="count-badge">2 Scheduled</span>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div class="upcoming-job-card">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="upcoming-date-box">
+                      <span>TOM</span>
+                      <strong>24</strong>
+                    </div>
+                    <div>
+                      <h5 style="font-size: 13px; font-weight: 700;">Pipe Leakage & Joint Sealing</h5>
+                      <p style="font-size: 11px; color: var(--text-muted);">10:00 AM – 12:00 PM • Sunil Hegde</p>
+                    </div>
+                  </div>
+                  <span style="font-size: 13px; font-weight: 800; color: var(--primary-green);">₹399</span>
+                </div>
+
+                <div class="upcoming-job-card">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="upcoming-date-box">
+                      <span>TOM</span>
+                      <strong>24</strong>
+                    </div>
+                    <div>
+                      <h5 style="font-size: 13px; font-weight: 700;">Toilet Flush Fitting & Ball Valve</h5>
+                      <p style="font-size: 11px; color: var(--text-muted);">03:00 PM – 05:00 PM • Pooja Nair</p>
+                    </div>
+                  </div>
+                  <span style="font-size: 13px; font-weight: 800; color: var(--primary-green);">₹299</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TAB 2: JOBS TAB (WORKER JOBS SCREEN) -->
+        <div class="tab-content-view" id="tab-jobs">
+          <div class="tab-header">
+            <h1>Worker Jobs Screen</h1>
+            <p>Live incoming requests & marketplace dispatches</p>
+          </div>
+
+          <!-- Matching Criteria Filter Indicator -->
+          <div class="matching-criteria-box">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-weight: 700; color: var(--text-main); font-size: 11px;">Active Dispatch Filter:</span>
+              <span style="font-size: 10px; color: var(--text-muted);">Matches your trade, status, & sector</span>
+            </div>
+            <div class="matching-criteria-pills">
+              <span class="criteria-pill" id="filter-skill-pill"><i data-lucide="wrench" style="width: 10px; height: 10px;"></i> <span id="filter-skill-text">Plumbing</span></span>
+              <span class="criteria-pill online" id="filter-online-pill"><i data-lucide="radio" style="width: 10px; height: 10px;"></i> <span id="filter-online-text">Online</span></span>
+              <span class="criteria-pill"><i data-lucide="map-pin" style="width: 10px; height: 10px;"></i> Indiranagar</span>
+            </div>
+          </div>
+
+          <!-- Filter Pills -->
+          <div class="tab-filter-pills" id="jobs-filter-pills">
+            <button class="tab-filter-pill active" data-filter="all">All Available (<span id="count-all-avail">3</span>)</button>
+            <button class="tab-filter-pill" data-filter="instant">⚡ Instant (<span id="count-instant">1</span>)</button>
+            <button class="tab-filter-pill" data-filter="prebook">📅 Pre-Booking (<span id="count-prebook">1</span>)</button>
+            <button class="tab-filter-pill" data-filter="emergency">🚨 Emergency (<span id="count-emergency">1</span>)</button>
+            <button class="tab-filter-pill" data-filter="assigned">✓ Assigned (<span id="count-assigned">1</span>)</button>
+          </div>
+
+          <!-- Jobs Container -->
+          <div style="padding: 14px 20px; display: flex; flex-direction: column; gap: 14px;" id="worker-jobs-container">
+            
+            <!-- 1. INSTANT REQUEST CARD -->
+            <div class="job-request-card instant" id="job-card-cp9104" data-type="instant">
+              <div class="job-card-header-row">
+                <div>
+                  <span class="badge-req-type instant">
+                    <i data-lucide="zap" style="width: 11px; height: 11px;"></i> INSTANT REQUEST
+                  </span>
+                  <h3 class="job-service-name" style="margin-top: 6px;">Plumbing Leakage & Pipe Repair</h3>
+                </div>
+                <span class="job-booking-id-tag">ID: #CP-9104</span>
+              </div>
+
+              <div class="job-details-block">
+                <div class="job-detail-line">
+                  <span><i data-lucide="map-pin" style="width: 12px; height: 12px; vertical-align: middle;"></i> Customer Location:</span>
+                  <strong style="color: var(--text-main);">Indiranagar 100ft Rd, Bengaluru</strong>
+                </div>
+                <div class="job-detail-line">
+                  <span><i data-lucide="navigation" style="width: 12px; height: 12px; vertical-align: middle;"></i> Distance:</span>
+                  <strong style="color: var(--primary-blue);">1.2 km away</strong>
+                </div>
+                <div class="job-detail-line">
+                  <span><i data-lucide="clock" style="width: 12px; height: 12px; vertical-align: middle;"></i> Requested Time:</span>
+                  <strong style="color: var(--text-main);">Just Now (10:35 AM)</strong>
+                </div>
+                <div style="margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--border-light);">
+                  <span style="font-size: 11px; color: var(--text-muted); display: block;">Problem Description:</span>
+                  <p class="job-problem-desc">Tap & Mixer Leak • High pressure joint failure under main washbasin.</p>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 14px; font-weight: 800; color: var(--primary-green);">Fixed Rate: ₹348.00</span>
+                <span style="font-size: 11px; color: var(--primary-blue); font-weight: 700;">Customer: P. Vishnu Vardhan</span>
+              </div>
+
+              <div class="job-card-actions">
+                <button class="btn-primary" onclick="window.workerApp.acceptJob('CP-9104', 'INSTANT')">
+                  <i data-lucide="check" style="width: 14px; height: 14px;"></i>
+                  <span>ACCEPT JOB</span>
+                </button>
+                <button class="btn-secondary" onclick="window.workerApp.rejectJob('CP-9104')">
+                  <span>REJECT</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 2. PRE-BOOKING CARD -->
+            <div class="job-request-card prebook" id="job-card-cp9208" data-type="prebook">
+              <div class="job-card-header-row">
+                <div>
+                  <span class="badge-req-type prebook">
+                    <i data-lucide="calendar" style="width: 11px; height: 11px;"></i> PRE-BOOKING
+                  </span>
+                  <h3 class="job-service-name" style="margin-top: 6px;">Pipe Leakage & Joint Sealing</h3>
+                </div>
+                <span class="job-booking-id-tag">ID: #CP-9208</span>
+              </div>
+
+              <div class="job-details-block">
+                <div class="job-detail-line">
+                  <span><i data-lucide="map-pin" style="width: 12px; height: 12px; vertical-align: middle;"></i> Customer Location:</span>
+                  <strong style="color: var(--text-main);">Indiranagar 100ft Rd, Bengaluru</strong>
+                </div>
+                <div class="job-detail-line">
+                  <span><i data-lucide="calendar-check" style="width: 12px; height: 12px; vertical-align: middle;"></i> Scheduled Date:</span>
+                  <strong style="color: #4F46E5;">Tomorrow (24 Sep)</strong>
+                </div>
+                <div class="job-detail-line">
+                  <span><i data-lucide="clock" style="width: 12px; height: 12px; vertical-align: middle;"></i> Scheduled Time:</span>
+                  <strong style="color: var(--text-main);">11:30 AM – 01:30 PM</strong>
+                </div>
+                <div style="margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--border-light);">
+                  <span style="font-size: 11px; color: var(--text-muted); display: block;">Problem Description:</span>
+                  <p class="job-problem-desc">Concealed pipe joint seepage in bathroom wall requiring sealant injection.</p>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 14px; font-weight: 800; color: var(--primary-green);">Fixed Rate: ₹399.00</span>
+                <span style="font-size: 11px; color: #4F46E5; font-weight: 700;">Customer: P. Vishnu Vardhan</span>
+              </div>
+
+              <div class="job-card-actions">
+                <button class="btn-primary" style="background: linear-gradient(135deg, #4F46E5 0%, #1D4ED8 100%);" onclick="window.workerApp.acceptJob('CP-9208', 'PRE-BOOKING')">
+                  <i data-lucide="check" style="width: 14px; height: 14px;"></i>
+                  <span>ACCEPT</span>
+                </button>
+                <button class="btn-secondary" onclick="window.workerApp.rejectJob('CP-9208')">
+                  <span>REJECT</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 3. EMERGENCY SOS CARD -->
+            <div class="job-request-card emergency" id="job-card-sos5501" data-type="emergency">
+              <div class="job-card-header-row">
+                <div>
+                  <span class="badge-req-type emergency">
+                    <i data-lucide="siren" style="width: 11px; height: 11px;"></i> EMERGENCY JOB REQUEST
+                  </span>
+                  <h3 class="job-service-name" style="margin-top: 6px; color: #991B1B;">Major Pipe Burst / Ceilings Flood</h3>
+                </div>
+                <span class="job-booking-id-tag" style="background: #FEE2E2; color: var(--accent-red);">ID: #SOS-5501</span>
+              </div>
+
+              <div class="job-details-block" style="background: #FFF1F2; border: 1px solid #FECACA;">
+                <div class="job-detail-line">
+                  <span><i data-lucide="map-pin" style="width: 12px; height: 12px; vertical-align: middle; color: var(--accent-red);"></i> Customer Location:</span>
+                  <strong style="color: #991B1B;">Indiranagar 100ft Rd, Bengaluru</strong>
+                </div>
+                <div class="job-detail-line">
+                  <span><i data-lucide="navigation" style="width: 12px; height: 12px; vertical-align: middle; color: var(--accent-red);"></i> Distance:</span>
+                  <strong style="color: var(--accent-red);">1.1 km away</strong>
+                </div>
+                <div class="job-detail-line">
+                  <span><i data-lucide="gauge" style="width: 12px; height: 12px; vertical-align: middle; color: var(--accent-red);"></i> Est. Travel Distance:</span>
+                  <strong style="color: #991B1B;">1.1 km (8–12 mins drive)</strong>
+                </div>
+                <div style="margin-top: 4px; padding-top: 6px; border-top: 1px dashed #FECACA;">
+                  <span style="font-size: 11px; color: #991B1B; display: block; font-weight: 700;">Problem Description:</span>
+                  <p class="job-problem-desc" style="color: #7F1D1D;">Main pipe connection fractured, water flooding kitchen and hallway rapidly.</p>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 15px; font-weight: 800; color: var(--primary-green);">Emergency Payout: ₹599.00</span>
+                <span style="font-size: 11px; color: var(--accent-red); font-weight: 800;">🚨 Rapid Dispatch</span>
+              </div>
+
+              <div class="job-card-actions">
+                <button class="btn-danger" onclick="window.workerApp.acceptJob('SOS-5501', 'EMERGENCY')">
+                  <i data-lucide="zap" style="width: 14px; height: 14px;"></i>
+                  <span>ACCEPT EMERGENCY JOB</span>
+                </button>
+                <button class="btn-outline-danger" onclick="window.workerApp.rejectJob('SOS-5501')">
+                  <span>REJECT</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 4. ALREADY ASSIGNED / ACTIVE JOBS SECTION -->
+            <div id="assigned-jobs-section" data-type="assigned" style="margin-top: 10px;">
+              <h4 style="font-size: 14px; font-weight: 800; margin-bottom: 8px; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
+                <i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--primary-green);"></i>
+                <span>Currently Assigned Jobs</span>
+              </h4>
+              <div class="today-job-card" id="assigned-job-cp8841">
+                <div class="today-job-header">
+                  <div>
+                    <span class="job-status-pill in-progress">Job Assigned • En Route</span>
+                    <h4 style="font-size: 14px; font-weight: 800; margin-top: 6px;">Plumbing Leakage & Pipe Repair</h4>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Job #CP-8841 • Customer: P. Vishnu Vardhan</p>
+                  </div>
+                  <span style="font-size: 14px; font-weight: 800; color: var(--primary-green);">₹348</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                  <span style="font-size: 12px; color: var(--text-muted);"><i data-lucide="map-pin" style="width: 12px; height: 12px; vertical-align: middle;"></i> Indiranagar 100ft Rd</span>
+                  <div style="display: flex; gap: 6px;">
+                    <button class="btn-job-action nav" style="width: auto; padding: 6px 10px; background: var(--primary-blue-light); color: var(--primary-blue);" onclick="window.workerApp.openJobDetails('CP-8841', 'INSTANT')">
+                      <i data-lucide="file-text" style="width: 13px; height: 13px;"></i> Details
+                    </button>
+                    <button class="btn-job-action nav" style="width: auto; padding: 6px 10px;" onclick="window.workerApp.openNavModal()">
+                      <i data-lucide="navigation" style="width: 13px; height: 13px;"></i> Route
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TAB 3: EARNINGS TAB -->
+        <div class="tab-content-view" id="tab-earnings">
+          <div class="tab-header">
+            <h1>Cooperative Earnings</h1>
+            <p>100% transparent member wage & patronage dividend</p>
+          </div>
+          <div style="padding: 16px 20px;">
+            <div class="earnings-summary-card" style="margin: 0 0 16px;">
+              <span class="earnings-label">Weekly Settled Total</span>
+              <div class="earnings-amount-hero">₹8,460.00</div>
+              <p style="font-size: 12px; opacity: 0.9;">Next Direct Bank Settlement: Tomorrow, 10:00 AM</p>
+            </div>
+
+            <div class="form-card" style="margin-bottom: 14px;">
+              <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 8px;">Patronage Dividend Reserve</h4>
+              <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">As an owner-member of the cooperative, you receive profit distributions from the collective fund.</p>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--bg-muted); border-radius: var(--radius-md);">
+                <span style="font-size: 13px; font-weight: 700;">Accrued Dividend</span>
+                <strong style="color: var(--primary-green); font-size: 16px;">₹1,840.00</strong>
+              </div>
+            </div>
+
+            <button class="btn-primary" onclick="window.workerApp.showToast('Instant UPI Payout initiated to verified bank account.', 'success')">
+              <i data-lucide="arrow-down-to-dot" style="width: 16px; height: 16px;"></i>
+              <span>Instant Payout to Bank (UPI)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 4: PROFILE TAB -->
+        <div class="tab-content-view" id="tab-profile">
+          <div class="profile-card-header">
+            <img id="profile-avatar-large" src="https://images.unsplash.com/photo-1540569014015-19a7be504e3a?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="profile-avatar-large">
+            <h3 id="profile-name-large">Ramesh Kumar</h3>
+            <span class="worker-coop-pill" id="profile-badge-pill" style="margin-top: 6px;">✓ Verified Co-op Member #402</span>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Primary Guild: Master Plumber (6+ Years)</p>
+          </div>
+
+          <div class="profile-settings-list">
+            <div class="profile-setting-item" onclick="window.workerApp.showScreen('verification')">
+              <div class="setting-left">
+                <div class="setting-icon"><i data-lucide="shield-check" style="width: 18px; height: 18px;"></i></div>
+                <div>
+                  <h5 style="font-size: 13px; font-weight: 700;">Guild Certification & ID</h5>
+                  <p style="font-size: 11px; color: var(--text-muted);">Aadhaar & Trade Verification Status</p>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-subtle);"></i>
+            </div>
+
+            <div class="profile-setting-item" onclick="window.workerApp.showToast('Cooperative Annual General Meeting voting right: Active', 'success')">
+              <div class="setting-left">
+                <div class="setting-icon" style="background: var(--primary-green-light); color: var(--primary-green);"><i data-lucide="vote" style="width: 18px; height: 18px;"></i></div>
+                <div>
+                  <h5 style="font-size: 13px; font-weight: 700;">Co-op Member Voting Rights</h5>
+                  <p style="font-size: 11px; color: var(--text-muted);">1 Member = 1 Equal Vote</p>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-subtle);"></i>
+            </div>
+
+            <div class="profile-setting-item" onclick="window.workerApp.logout()">
+              <div class="setting-left">
+                <div class="setting-icon" style="background: var(--accent-red-light); color: var(--accent-red);"><i data-lucide="log-out" style="width: 18px; height: 18px;"></i></div>
+                <div>
+                  <h5 style="font-size: 13px; font-weight: 700; color: var(--accent-red);">Logout from Terminal</h5>
+                  <p style="font-size: 11px; color: var(--text-muted);">End shift and go offline</p>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-subtle);"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4-TAB BOTTOM NAVIGATION -->
+        <nav class="bottom-nav">
+          <button class="nav-item active" data-tab="home">
+            <i data-lucide="home" class="nav-icon" style="width: 20px; height: 20px;"></i>
+            <span>Home</span>
+          </button>
+          <button class="nav-item" data-tab="jobs">
+            <i data-lucide="briefcase" class="nav-icon" style="width: 20px; height: 20px;"></i>
+            <span>Jobs</span>
+            <span class="nav-badge-count" id="nav-jobs-count">2</span>
+          </button>
+          <button class="nav-item" data-tab="earnings">
+            <i data-lucide="wallet" class="nav-icon" style="width: 20px; height: 20px;"></i>
+            <span>Earnings</span>
+          </button>
+          <button class="nav-item" data-tab="profile">
+            <i data-lucide="user" class="nav-icon" style="width: 20px; height: 20px;"></i>
+            <span>Profile</span>
+          </button>
+        </nav>
+      </section>
+
+      <!-- ==============================================================
+           SCREEN 6: WORKER JOB DETAILS (Connected directly with Customer App)
+           ============================================================== -->
+      <section class="screen-view" id="screen-job-details">
+        <!-- Top App Header -->
+        <header class="app-header">
+          <button class="back-btn" id="btn-jd-back" onclick="window.workerApp.goBackFromJobDetails()" title="Back to Dashboard">
+            <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+          </button>
+          <h2 class="header-title">Job Details</h2>
+          <span class="step-pill" id="jd-header-status-pill" style="background: var(--primary-green-light); color: var(--primary-green); font-weight: 800;">
+            JOB ASSIGNED
+          </span>
+        </header>
+
+        <div class="screen-body-scroll" style="padding: 16px 20px 30px;">
+          
+          <!-- 1. Hero Job Card -->
+          <div class="job-hero-card" id="jd-hero-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <span class="badge-req-type instant" id="jd-request-type-badge">
+                <i data-lucide="zap" style="width: 12px; height: 12px;"></i>
+                <span id="jd-request-type-text">INSTANT</span>
+              </span>
+              <span class="job-booking-id-tag" id="jd-booking-id-tag" style="font-weight: 800; font-size: 12px;">ID: #CP-9104</span>
+            </div>
+
+            <h2 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-top: 10px; line-height: 1.3;" id="jd-service-name">
+              Plumbing Leakage & Pipe Repair
+            </h2>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-light);">
+              <div>
+                <span style="font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; display: block;">Booking Status</span>
+                <span class="job-status-pill in-progress" id="jd-booking-status" style="font-size: 13px; font-weight: 800; padding: 4px 10px; display: inline-flex; align-items: center; gap: 6px; margin-top: 4px;">
+                  <span class="live-radar-dot" style="width: 6px; height: 6px;"></span>
+                  <span id="jd-status-text">JOB ASSIGNED</span>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span style="font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; display: block;">Fixed Worker Payout</span>
+                <span style="font-size: 18px; font-weight: 900; color: var(--primary-green);" id="jd-payout-amount">₹348.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Customer Information Card -->
+          <div class="form-card" style="margin-top: 14px;">
+            <div class="form-section-header">
+              <i data-lucide="user" style="width: 16px; height: 16px; color: var(--primary-blue);"></i>
+              <span>Customer Information</span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+              <div class="worker-avatar-circle" style="width: 44px; height: 44px; background: var(--primary-blue-light); color: var(--primary-blue); font-weight: 800; font-size: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" id="jd-customer-avatar">
+                PV
+              </div>
+              <div>
+                <h4 style="font-size: 15px; font-weight: 800; color: var(--text-main);" id="jd-customer-name">P. Vishnu Vardhan</h4>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Cooperative Certified Customer</p>
+              </div>
+            </div>
+
+            <div class="job-details-block" style="background: #F8FAFC;">
+              <div class="job-detail-line">
+                <span><i data-lucide="map-pin" style="width: 13px; height: 13px; vertical-align: middle;"></i> Customer Location:</span>
+                <strong style="color: var(--text-main);" id="jd-customer-location">Indiranagar 100ft Rd, Bengaluru</strong>
+              </div>
+              <div class="job-detail-line">
+                <span><i data-lucide="navigation" style="width: 13px; height: 13px; vertical-align: middle;"></i> Distance:</span>
+                <strong style="color: var(--primary-blue);" id="jd-distance">1.2 km away</strong>
+              </div>
+              <div class="job-detail-line">
+                <span><i data-lucide="phone" style="width: 13px; height: 13px; vertical-align: middle;"></i> Phone:</span>
+                <strong style="color: var(--text-main);" id="jd-customer-phone">+91 98480 22338</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Problem Description Card -->
+          <div class="form-card" style="margin-top: 14px;">
+            <div class="form-section-header">
+              <i data-lucide="alert-circle" style="width: 16px; height: 16px; color: var(--accent-amber);"></i>
+              <span>Problem Description</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-main); line-height: 1.5; font-weight: 500;" id="jd-problem-desc">
+              Tap & Mixer Leak • High pressure joint failure under main washbasin.
+            </p>
+            <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 11px; color: var(--text-muted);">
+              <i data-lucide="shield-check" style="width: 13px; height: 13px; color: var(--primary-green);"></i>
+              <span>Covered by Cooperative Standard Diagnostics & Fair Price Charter</span>
+            </div>
+          </div>
+
+          <!-- 4. THREE REQUIRED BUTTONS: VIEW LOCATION, NAVIGATE, CONTACT CUSTOMER -->
+          <div class="jd-action-buttons-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 16px;">
+            <button class="btn-job-action-quad" id="btn-jd-view-location" onclick="window.workerApp.openCustomerLocation()" title="View Customer Location">
+              <i data-lucide="map-pin" style="width: 18px; height: 18px; color: var(--primary-blue);"></i>
+              <span>VIEW LOCATION</span>
+            </button>
+            <button class="btn-job-action-quad" id="btn-jd-navigate" onclick="window.workerApp.openNavModal()" title="Start GPS Navigation">
+              <i data-lucide="navigation" style="width: 18px; height: 18px; color: #4F46E5;"></i>
+              <span>NAVIGATE</span>
+            </button>
+            <button class="btn-job-action-quad" id="btn-jd-contact" onclick="window.workerApp.callCustomer()" title="Contact Customer">
+              <i data-lucide="phone" style="width: 18px; height: 18px; color: var(--primary-green);"></i>
+              <span>CONTACT</span>
+            </button>
+          </div>
+
+          <!-- 5. JOB STATUS PROGRESSION CONTROLS (Synchronized with Customer App) -->
+          <div class="form-card" style="margin-top: 18px; border: 1.5px solid var(--border-light);">
+            <div class="form-section-header">
+              <i data-lucide="activity" style="width: 16px; height: 16px; color: var(--primary-green);"></i>
+              <span>Job Status & Dispatch Progression</span>
+            </div>
+
+            <!-- Progression Tracker Steps (5 Stages) -->
+            <div class="status-tracker-bar">
+              <div class="tracker-step active" id="tracker-step-1">
+                <div class="step-circle"><i data-lucide="check" style="width: 12px; height: 12px;"></i></div>
+                <span>Assigned</span>
+              </div>
+              <div class="tracker-line" id="tracker-line-1"></div>
+              <div class="tracker-step" id="tracker-step-2">
+                <div class="step-circle">2</div>
+                <span>On Way</span>
+              </div>
+              <div class="tracker-line" id="tracker-line-2"></div>
+              <div class="tracker-step" id="tracker-step-3">
+                <div class="step-circle">3</div>
+                <span>Verify</span>
+              </div>
+              <div class="tracker-line" id="tracker-line-3"></div>
+              <div class="tracker-step" id="tracker-step-4">
+                <div class="step-circle">4</div>
+                <span>Estimate</span>
+              </div>
+              <div class="tracker-line" id="tracker-line-4"></div>
+              <div class="tracker-step" id="tracker-step-5">
+                <div class="step-circle">5</div>
+                <span>Work</span>
+              </div>
+            </div>
+
+            <!-- STAGE 1: Initial "JOB ASSIGNED" State -> Action: "On the Way" -->
+            <div id="jd-stage-assigned" class="jd-stage-box" style="display: block; margin-top: 14px;">
+              <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+                Job is assigned to you. When ready to travel to the customer's doorstep, select <strong>"On the Way"</strong>. Customer App will immediately update with your live status and ETA.
+              </p>
+              <button class="btn-primary" id="btn-action-on-the-way" onclick="window.workerApp.updateJobStatus('ON_THE_WAY')" style="width: 100%;">
+                <i data-lucide="bike" style="width: 18px; height: 18px;"></i>
+                <span>On the Way</span>
+              </button>
+            </div>
+
+            <!-- STAGE 2: "On the Way" State -> Action: "I HAVE ARRIVED" -->
+            <div id="jd-stage-ontheway" class="jd-stage-box" style="display: none; margin-top: 14px;">
+              <div style="background: var(--primary-blue-light); border: 1px solid var(--primary-blue-subtle); border-radius: var(--radius-md); padding: 12px; margin-bottom: 12px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="live-radar-dot"></span>
+                  <span style="font-size: 13px; font-weight: 800; color: var(--primary-blue);">Status: Worker is on the way</span>
+                </div>
+                <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+                  Customer App is showing: <em>"Worker is on the way • Ramesh Kumar • Estimated arrival: 8-10 mins"</em>.
+                </p>
+              </div>
+              <button class="btn-success" id="btn-action-arrived" onclick="window.workerApp.updateJobStatus('WORKER_ARRIVED')" style="width: 100%; font-size: 14px;">
+                <i data-lucide="map-pin" style="width: 18px; height: 18px;"></i>
+                <span>I HAVE ARRIVED</span>
+              </button>
+            </div>
+
+            <!-- STAGE 3: "Customer Verification" (Part 4 Requirement 1) -->
+            <div id="jd-stage-arrived" class="jd-stage-box" style="display: none; margin-top: 14px;">
+              <div style="background: #FEF3C7; border: 1.5px solid #F59E0B; border-radius: var(--radius-md); padding: 14px; text-align: center;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 6px; color: #B45309; font-weight: 800; font-size: 15px;">
+                  <i data-lucide="shield-check" style="width: 18px; height: 18px;"></i>
+                  <span>Customer Verification</span>
+                </div>
+                <p style="font-size: 12px; color: #92400E; margin-top: 4px;">
+                  Customer App is showing: <strong>"Verify Worker Arrival"</strong>. Ask customer to provide their 4-digit verification OTP.
+                </p>
+
+                <!-- 4-Box OTP input -->
+                <div class="worker-otp-wrap" style="display: flex; justify-content: center; gap: 10px; margin: 14px 0 10px;">
+                  <input type="text" maxlength="1" class="otp-box-worker" id="w-otp-1" value="4" autocomplete="off" inputmode="numeric">
+                  <input type="text" maxlength="1" class="otp-box-worker" id="w-otp-2" value="0" autocomplete="off" inputmode="numeric">
+                  <input type="text" maxlength="1" class="otp-box-worker" id="w-otp-3" value="9" autocomplete="off" inputmode="numeric">
+                  <input type="text" maxlength="1" class="otp-box-worker" id="w-otp-4" value="2" autocomplete="off" inputmode="numeric">
+                </div>
+
+                <div style="display: flex; gap: 8px; justify-content: center;">
+                  <button type="button" class="btn-success" id="btn-submit-arrival-otp" onclick="window.workerApp.verifyArrivalOtp()" style="padding: 10px 18px;">
+                    <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>
+                    <span>Verify OTP</span>
+                  </button>
+                  <button type="button" class="btn-secondary" id="btn-demo-autofill-worker-otp" onclick="window.workerApp.autofillWorkerOtp()" style="padding: 10px 14px; font-size: 12px;">
+                    <span>Auto 4092</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Customer Verified Banner (Shown immediately upon success) -->
+              <div id="jd-customer-verified-banner" style="display: none; background: #ECFDF5; border: 1.5px solid #059669; border-radius: var(--radius-md); padding: 14px; text-align: center; margin-top: 12px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 6px; color: #059669; font-weight: 800; font-size: 15px;">
+                  <i data-lucide="badge-check" style="width: 20px; height: 20px;"></i>
+                  <span>Customer Verified</span>
+                </div>
+                <p style="font-size: 12px; color: #065F46; margin-top: 4px;">
+                  Customer side updated to: <strong>"Worker Verified"</strong>. Doorstep arrival confirmed.
+                </p>
+                <button type="button" class="btn-primary" onclick="window.workerApp.openServiceInspection()" style="margin-top: 10px; width: 100%; font-size: 13px;">
+                  <span>Proceed to Service Inspection</span>
+                  <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- STAGE 4: "SERVICE INSPECTION" (Part 4 Requirement 2) -->
+            <div id="jd-stage-inspection" class="jd-stage-box" style="display: none; margin-top: 14px;">
+              <div class="inspection-card">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                  <div style="display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 15px; color: var(--text-main);">
+                    <i data-lucide="clipboard-list" style="width: 18px; height: 18px; color: var(--primary-blue);"></i>
+                    <span>Inspect Customer Problem</span>
+                  </div>
+                  <span class="badge-req-type instant" style="font-size: 10px;">Inspection</span>
+                </div>
+
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
+                  Diagnose the issue at doorstep and enter transparent materials and labour specifications:
+                </p>
+
+                <!-- 1. Problem Identified -->
+                <div class="inspection-form-group">
+                  <label class="inspection-label" for="worker-est-problem">Problem Identified</label>
+                  <input type="text" id="worker-est-problem" class="inspection-input" value="Main ceramic disc cartridge cracked & pipe nipple corroded" placeholder="Describe diagnosed defect...">
+                </div>
+
+                <!-- 2. Materials Required & Cost -->
+                <div class="inspection-form-group">
+                  <label class="inspection-label">Materials Required & Cost (₹)</label>
+                  <div class="item-cost-split">
+                    <input type="text" id="worker-est-materials-desc" class="inspection-input" value="Ceramic cartridge replacement + Teflon seal pack" placeholder="Parts & materials required...">
+                    <div class="currency-input-wrap">
+                      <span class="currency-symbol-tag">₹</span>
+                      <input type="number" id="worker-est-materials-cost" class="inspection-input" value="280" oninput="window.workerApp.calculateEstimateTotal()">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 3. Labour Requirement & Cost -->
+                <div class="inspection-form-group">
+                  <label class="inspection-label">Labour Requirement & Cost (₹)</label>
+                  <div class="item-cost-split">
+                    <input type="text" id="worker-est-labour-desc" class="inspection-input" value="Precision plumbing disassembly, valve reseat & pressure test" placeholder="Labour scope...">
+                    <div class="currency-input-wrap">
+                      <span class="currency-symbol-tag">₹</span>
+                      <input type="number" id="worker-est-labour-cost" class="inspection-input" value="199" oninput="window.workerApp.calculateEstimateTotal()">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 4. Additional Notes -->
+                <div class="inspection-form-group">
+                  <label class="inspection-label" for="worker-est-notes">Additional Notes</label>
+                  <textarea id="worker-est-notes" class="inspection-input" rows="2" placeholder="Warranties, testing, or precautions...">Includes 90-day cooperative workmanship warranty & high pressure testing.</textarea>
+                </div>
+
+                <!-- Button: CREATE ESTIMATE -->
+                <button type="button" class="btn-primary" id="btn-create-estimate" onclick="window.workerApp.createEstimate()" style="width: 100%; margin-top: 6px; font-size: 14px; font-weight: 800;">
+                  <i data-lucide="calculator" style="width: 16px; height: 16px;"></i>
+                  <span>CREATE ESTIMATE</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- STAGE 5: "ESTIMATE" BREAKDOWN & SEND (Part 4 Requirement 3) -->
+            <div id="jd-stage-estimate-review" class="jd-stage-box" style="display: none; margin-top: 14px;">
+              <div class="inspection-card" style="border: 2px solid var(--primary-blue);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                  <div style="display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 15px; color: var(--primary-blue);">
+                    <i data-lucide="file-check-2" style="width: 18px; height: 18px;"></i>
+                    <span>Estimate Summary</span>
+                  </div>
+                  <span style="font-size: 10px; font-weight: 700; color: var(--primary-green); background: #DCFCE7; padding: 2px 8px; border-radius: 99px;">0% Commission</span>
+                </div>
+
+                <div style="background: var(--bg-muted); border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 12px; font-size: 12px; color: var(--text-main);">
+                  <strong>Problem:</strong> <span id="we-disp-problem">Main ceramic disc cartridge cracked & pipe nipple corroded</span>
+                </div>
+
+                <!-- Required Breakdown Display: Materials, Labour, Total -->
+                <table class="estimate-preview-table">
+                  <tr>
+                    <td><strong>Materials:</strong> <span style="font-size: 11px; color: var(--text-muted); display: block;" id="we-disp-materials-desc">Ceramic cartridge replacement + Teflon seal pack</span></td>
+                    <td class="amount-col" id="we-disp-materials">₹280.00</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Labour:</strong> <span style="font-size: 11px; color: var(--text-muted); display: block;" id="we-disp-labour-desc">Precision plumbing disassembly, valve reseat & pressure test</span></td>
+                    <td class="amount-col" id="we-disp-labour">₹199.00</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td><strong>Total:</strong></td>
+                    <td class="amount-col" id="we-disp-total" style="font-size: 18px;">₹479.00</td>
+                  </tr>
+                </table>
+
+                <div style="display: flex; gap: 8px; margin-top: 10px;">
+                  <button type="button" class="btn-success" id="btn-send-estimate" onclick="window.workerApp.sendEstimate()" style="flex: 1; font-size: 14px; font-weight: 800;">
+                    <i data-lucide="send" style="width: 16px; height: 16px;"></i>
+                    <span>SEND ESTIMATE</span>
+                  </button>
+                  <button type="button" class="btn-secondary" onclick="window.workerApp.openServiceInspection()" style="padding: 10px 14px; font-size: 12px;" title="Edit inspection">
+                    <i data-lucide="pencil" style="width: 14px; height: 14px;"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- STAGE 6: "WAITING FOR CUSTOMER APPROVAL" (Part 4 Requirement 3 Post-Send) -->
+            <div id="jd-stage-waiting-approval" class="jd-stage-box" style="display: none; margin-top: 14px;">
+              <div class="waiting-approval-card">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--primary-blue); font-weight: 800; font-size: 15px;">
+                  <span class="live-radar-dot"></span>
+                  <span>Waiting for Customer Approval</span>
+                </div>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">
+                  Estimate sent to customer! Customer App is now displaying: <strong>"Estimate Received"</strong>.
+                </p>
+                <div style="background: #FFFFFF; border: 1px dashed var(--primary-blue); border-radius: var(--radius-md); padding: 10px; margin: 12px 0;">
+                  <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Awaiting Approval for Total</span>
+                  <div style="font-size: 20px; font-weight: 900; color: var(--primary-blue);" id="we-waiting-total">₹479.00</div>
+                </div>
+
+                <!-- Simulation Quick-Test Buttons -->
+                <div style="border-top: 1px dashed #CBD5E1; padding-top: 10px; margin-top: 10px;">
+                  <span style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 6px;">Direct Demo Simulation Triggers:</span>
+                  <div style="display: flex; gap: 6px;">
+                    <button type="button" class="btn-success" onclick="window.workerApp.simulateCustomerAccept()" style="flex: 1; padding: 6px 10px; font-size: 11px;">
+                      ✓ Simulate Customer Accept
+                    </button>
+                    <button type="button" class="btn-outline-danger" onclick="window.workerApp.simulateCustomerReject()" style="flex: 1; padding: 6px 10px; font-size: 11px; border-radius: var(--radius-md);">
+                      ✕ Simulate Customer Reject
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- STAGE 7: "CUSTOMER ACCEPTS" -> "Estimate Accepted" (Part 4 Requirement 4) -->
+            <div id="jd-stage-estimate-accepted" class="jd-stage-box" style="display: none; margin-top: 14px;">
+              <div class="estimate-accepted-card">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 6px; color: #059669; font-weight: 800; font-size: 16px;">
+                  <i data-lucide="check-circle-2" style="width: 20px; height: 20px;"></i>
+                  <span>Estimate Accepted</span>
+                </div>
+                <p style="font-size: 12px; color: #065F46; margin-top: 4px;">
+                  Customer pressed <strong>"ACCEPT & START WORK"</strong>. Full estimate (₹479.00) is authorized.
+                </p>
+                <div style="background: #FFFFFF; border-radius: var(--radius-sm); padding: 8px 12px; margin: 10px 0; font-size: 12px; color: var(--text-main);">
+                  ✓ Customer confirmed parts & labour specifications.
+                </div>
+                <button type="button" class="btn-primary" id="btn-worker-start-work" onclick="window.workerApp.startWork()" style="width: 100%; font-size: 14px; font-weight: 800; background: var(--primary-green);">
+                  <i data-lucide="play" style="width: 16px; height: 16px;"></i>
+                  <span>START WORK</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- STAGE 8: "CUSTOMER REJECTS" -> "Estimate Rejected" & Visit Fee (Part 4 Requirement 5) -->
+            <div id="jd-stage-estimate-rejected" class="jd-stage-box" style="display: none; margin-top: 14px;">
+              <div class="estimate-rejected-card">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 6px; color: #E11D48; font-weight: 800; font-size: 16px;">
+                  <i data-lucide="x-circle" style="width: 20px; height: 20px;"></i>
+                  <span>Estimate Rejected</span>
+                </div>
+                <p style="font-size: 12px; color: #9F1239; margin-top: 4px;">
+                  Customer selected: <strong>"REJECT / PAY VISIT FEE"</strong>. Repair work is declined.
+                </p>
+
+                <!-- Visit / Inspection Fee Status Card -->
+                <div style="background: #FFFFFF; border: 1.5px solid #F43F5E; border-radius: var(--radius-md); padding: 12px; margin: 12px 0; text-align: left;">
+                  <span style="font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Visit / Inspection Fee Status</span>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                    <div>
+                      <strong style="font-size: 14px; color: var(--text-main);">Standard Diagnostic Fee</strong>
+                      <p style="font-size: 11px; color: var(--text-muted);">Cooperative guaranteed doorstep callout</p>
+                    </div>
+                    <strong style="font-size: 16px; color: var(--text-main);">₹149.00</strong>
+                  </div>
+                  <div style="margin-top: 8px;">
+                    <span class="fee-status-badge settled" id="worker-visit-fee-status-pill">
+                      <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                      <span>Settled via Customer Digital Payment</span>
+                    </span>
+                  </div>
+                </div>
+
+                <button type="button" class="btn-secondary" onclick="window.workerApp.completeVisitFeeJob()" style="width: 100%; font-size: 13px; font-weight: 700;">
+                  <i data-lucide="check" style="width: 16px; height: 16px;"></i>
+                  <span>Complete Visit & Credit ₹149.00</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- ==============================================================
+                 PART 5: STAGE 9: "WORK IN PROGRESS" (Requirement 1)
+                 ============================================================== -->
+            <div id="jd-stage-inprogress" class="jd-stage-box" style="display: none; margin-top: 14px;">
+              <div style="background: #ECFDF5; border: 1.5px solid #059669; border-radius: var(--radius-md); padding: 14px; text-align: center; margin-bottom: 12px;">
+                <span style="font-size: 16px; font-weight: 800; color: #059669; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                  <span class="live-radar-dot"></span>
+                  <span>WORK IN PROGRESS</span>
+                </span>
+                <p style="font-size: 12px; color: #065F46; margin-top: 4px;">
+                  Customer App is showing: <strong>"Work in Progress"</strong>. Repair is active.
+                </p>
+              </div>
+
+              <!-- Required 6 Fields: Customer, Service, Problem, Materials, Estimated amount, Start time -->
+              <div class="work-progress-detail-grid">
+                <div class="work-detail-item">
+                  <span class="work-detail-label">Customer</span>
+                  <div class="work-detail-value" id="wp-customer-name">P. Vishnu Vardhan</div>
+                </div>
+                <div class="work-detail-item">
+                  <span class="work-detail-label">Start Time</span>
+                  <div class="work-detail-value" id="wp-start-time">11:22 AM</div>
+                </div>
+                <div class="work-detail-item full-width">
+                  <span class="work-detail-label">Service</span>
+                  <div class="work-detail-value" id="wp-service-name">Plumbing Leakage & Pipe Repair</div>
+                </div>
+                <div class="work-detail-item full-width">
+                  <span class="work-detail-label">Problem</span>
+                  <div class="work-detail-value" id="wp-problem-desc">Main ceramic disc cartridge cracked & pipe nipple corroded</div>
+                </div>
+                <div class="work-detail-item full-width">
+                  <span class="work-detail-label">Materials</span>
+                  <div class="work-detail-value" id="wp-materials-desc">Ceramic cartridge replacement + Teflon seal pack</div>
+                </div>
+                <div class="work-detail-item full-width" style="background: #EFF6FF; border-color: #BFDBFE;">
+                  <span class="work-detail-label" style="color: var(--primary-blue);">Estimated Amount</span>
+                  <div class="work-detail-value highlight" id="wp-estimated-amount">₹479.00</div>
+                </div>
+              </div>
+
+              <!-- Required Button 1: "MARK WORK COMPLETED" -->
+              <button class="btn-primary" id="btn-mark-work-completed" onclick="window.workerApp.markWorkCompleted()" style="width: 100%; font-size: 14px; font-weight: 800; background: var(--primary-green);">
+                <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i>
+                <span>MARK WORK COMPLETED</span>
+              </button>
+            </div>
+
+            <!-- ==============================================================
+                 PART 5: STAGE 10: "COMPLETE WORK" CONFIRMATION (Requirement 2)
+                 ============================================================== -->
+            <div id="jd-stage-completion-confirm" class="jd-stage-box" style="display: none; margin-top: 14px;">
+              <div class="completion-confirm-card">
+                <div style="display: flex; align-items: center; gap: 8px; color: #059669; font-weight: 800; font-size: 16px; margin-bottom: 8px;">
+                  <i data-lucide="clipboard-check" style="width: 20px; height: 20px;"></i>
+                  <span>Work Completed Confirmation</span>
+                </div>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+                  Confirm that doorstep repair has been executed according to cooperative quality guidelines:
+                </p>
+
+                <div style="background: var(--bg-muted); border-radius: var(--radius-md); padding: 12px; margin-bottom: 12px;">
+                  <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Work Completed Confirmation:</div>
+                  <div style="font-size: 13px; font-weight: 700; color: #059669; margin-top: 3px;">
+                    ✓ Diagnostic disassembly, replacement, reseat and high-pressure leak testing complete.
+                  </div>
+                </div>
+
+                <div style="border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 12px; margin-bottom: 14px;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="font-size: 12px; color: var(--text-muted);">Materials Used:</span>
+                    <strong style="font-size: 12px; color: var(--text-main);" id="cc-materials-used">Ceramic cartridge replacement + Teflon seal pack</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--border-light); padding-top: 8px; margin-top: 6px;">
+                    <span style="font-size: 14px; font-weight: 800; color: var(--text-main);">Final Amount:</span>
+                    <strong style="font-size: 18px; font-weight: 900; color: var(--primary-blue);" id="cc-final-amount">₹479.00</strong>
+                  </div>
+                </div>
+
+                <!-- Required Button 2: "COMPLETE JOB" -->
+                <button class="btn-success" id="btn-complete-job-final" onclick="window.workerApp.confirmCompleteJob()" style="width: 100%; font-size: 14px; font-weight: 800; padding: 12px;">
+                  <i data-lucide="check" style="width: 18px; height: 18px;"></i>
+                  <span>COMPLETE JOB</span>
+                </button>
+                <button class="btn-secondary" onclick="window.workerApp.cancelCompletionConfirm()" style="width: 100%; margin-top: 8px; font-size: 12px;">
+                  <span>Back to Repair Details</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- ==============================================================
+                 PART 5: STAGE 11: "WAITING FOR CUSTOMER PAYMENT" (Requirement 4)
+                 ============================================================== -->
+            <div id="jd-stage-waiting-payment" class="jd-stage-box" style="display: none; margin-top: 14px;">
+              <div class="waiting-payment-box">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: #B45309; font-weight: 800; font-size: 16px;">
+                  <span class="live-radar-dot" style="background: #F59E0B;"></span>
+                  <span>Waiting for Customer Payment</span>
+                </div>
+                <p style="font-size: 12px; color: #92400E; margin-top: 6px;">
+                  Customer has received the completion invoice. <strong>Job remains open until payment is verified.</strong>
+                </p>
+
+                <div style="background: #FFFFFF; border: 1.5px dashed #F59E0B; border-radius: var(--radius-md); padding: 12px; margin: 14px 0;">
+                  <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Pending Digital Settlement</span>
+                  <div style="font-size: 24px; font-weight: 900; color: #B45309; margin-top: 2px;" id="wp-pending-amount">₹479.00</div>
+                  <span style="font-size: 11px; color: var(--text-muted);">Payment via UPI, Member Wallet, or Card</span>
+                </div>
+
+                <div style="border-top: 1px dashed #FDE68A; padding-top: 10px; margin-top: 10px;">
+                  <span style="font-size: 10px; color: #92400E; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 6px;">Direct Demo Simulation Trigger:</span>
+                  <button type="button" class="btn-success" onclick="window.workerApp.simulateCustomerPayment()" style="width: 100%; font-size: 12px; padding: 8px;">
+                    <i data-lucide="check" style="width: 14px; height: 14px;"></i>
+                    <span>✓ Simulate Customer Payment (₹479.00)</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- ==============================================================
+                 PART 5: STAGE 12: "JOB CLOSED & SETTLED" (Final Settlement)
+                 ============================================================== -->
+            <div id="jd-stage-job-closed" class="jd-stage-box" style="display: none; margin-top: 14px;">
+              <div class="payment-received-card">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: #059669; font-weight: 800; font-size: 17px;">
+                  <i data-lucide="badge-check" style="width: 22px; height: 22px;"></i>
+                  <span>Payment Received • Job Closed</span>
+                </div>
+                <p style="font-size: 12px; color: #065F46; margin-top: 4px;">
+                  Customer successfully settled the invoice via digital payment.
+                </p>
+
+                <div style="background: #FFFFFF; border-radius: var(--radius-md); padding: 12px; margin: 14px 0; border: 1.5px solid #10B981;">
+                  <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Amount Credited to Worker Earnings</span>
+                  <div style="font-size: 26px; font-weight: 900; color: #059669; margin: 4px 0;" id="jc-credited-amount">₹479.00</div>
+                  <span style="font-size: 11px; color: var(--primary-green); font-weight: 700;">✓ 0% Platform Commission Deducted</span>
+                </div>
+
+                <button class="btn-primary" onclick="window.workerApp.returnToDashboardAfterJobClosed()" style="width: 100%; font-size: 14px; font-weight: 800;">
+                  <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+                  <span>Return to Worker Dashboard</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           MODAL: CUSTOMER LOCATION VIEW (Part 3 Requirement 2)
+           ============================================================== -->
+      <div class="modal-overlay" id="modal-customer-location">
+        <div class="bottom-drawer-modal">
+          <div class="modal-handle-bar"></div>
+          
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+            <div>
+              <span class="incoming-modal-badge instant" style="margin-bottom: 6px;">
+                <i data-lucide="map-pin" style="width: 12px; height: 12px;"></i>
+                Customer Location View
+              </span>
+              <h3 style="font-size: 17px; font-weight: 800; color: var(--text-main);" id="cl-title">Customer Location & Distance</h3>
+            </div>
+            <button class="back-btn" onclick="window.workerApp.closeModal('modal-customer-location')" title="Close">
+              <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+            </button>
+          </div>
+
+          <!-- Location Info Grid -->
+          <div class="job-details-block" style="background: #F8FAFC; border: 1px solid var(--border-light); margin-bottom: 14px;">
+            <div class="job-detail-line">
+              <span><i data-lucide="compass" style="width: 13px; height: 13px; vertical-align: middle; color: var(--primary-blue);"></i> Worker Current Location:</span>
+              <strong style="color: var(--text-main);" id="cl-worker-loc">CMH Road Co-op Depot, Indiranagar</strong>
+            </div>
+            <div class="job-detail-line">
+              <span><i data-lucide="map-pin" style="width: 13px; height: 13px; vertical-align: middle; color: var(--primary-green);"></i> Customer Location:</span>
+              <strong style="color: var(--text-main);" id="cl-customer-loc">Indiranagar 100ft Rd, Bengaluru</strong>
+            </div>
+            <div class="job-detail-line">
+              <span><i data-lucide="navigation" style="width: 13px; height: 13px; vertical-align: middle; color: #4F46E5;"></i> Distance:</span>
+              <strong style="color: #4F46E5; font-size: 13px;" id="cl-distance">1.2 km</strong>
+            </div>
+            <div class="job-detail-line">
+              <span><i data-lucide="clock" style="width: 13px; height: 13px; vertical-align: middle; color: var(--accent-amber);"></i> Estimated Travel Time:</span>
+              <strong style="color: var(--text-main); font-size: 13px;" id="cl-est-time">12 mins</strong>
+            </div>
+          </div>
+
+          <!-- Simulated Interactive Route Map Canvas / SVG -->
+          <div class="customer-location-map-card" style="position: relative; width: 100%; height: 210px; background: #E2E8F0; border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 14px; border: 1.5px solid var(--border-light);">
+            <!-- Map Grid Texture -->
+            <div style="position: absolute; inset: 0; background: linear-gradient(135deg, #e2e8f0 25%, #cbd5e1 25%, #cbd5e1 50%, #e2e8f0 50%, #e2e8f0 75%, #cbd5e1 75%, #cbd5e1 100%); background-size: 32px 32px; opacity: 0.35;"></div>
+
+            <!-- Simulated Street Network Lines -->
+            <svg style="position: absolute; width: 100%; height: 100%;" viewBox="0 0 380 210">
+              <!-- Grid streets -->
+              <line x1="20" y1="110" x2="360" y2="110" stroke="#CBD5E1" stroke-width="8" />
+              <line x1="120" y1="20" x2="120" y2="190" stroke="#CBD5E1" stroke-width="8" />
+              <line x1="260" y1="20" x2="260" y2="190" stroke="#CBD5E1" stroke-width="8" />
+              <!-- Active Route Path from Worker to Customer -->
+              <path d="M 50 150 L 120 150 L 120 70 L 310 70" fill="none" stroke="#2563EB" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6,4" />
+            </svg>
+
+            <!-- Worker Current Location Pin -->
+            <div style="position: absolute; left: 35px; top: 125px; text-align: center; z-index: 2;">
+              <div style="background: var(--primary-blue); color: #FFF; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(37,99,235,0.4); border: 2.5px solid #FFFFFF;">
+                <i data-lucide="bike" style="width: 18px; height: 18px;"></i>
+              </div>
+              <span style="font-size: 10px; font-weight: 800; background: #0F172A; color: #FFF; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 2px;">CMH Depot</span>
+            </div>
+
+            <!-- Customer Destination Pin -->
+            <div style="position: absolute; right: 40px; top: 45px; text-align: center; z-index: 2;">
+              <div style="background: var(--primary-green); color: #FFF; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(5,150,105,0.4); border: 2.5px solid #FFFFFF;">
+                <i data-lucide="home" style="width: 18px; height: 18px;"></i>
+              </div>
+              <span style="font-size: 10px; font-weight: 800; background: #047857; color: #FFF; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 2px;">Customer Home</span>
+            </div>
+
+            <!-- Travel Status Tag -->
+            <div style="position: absolute; bottom: 10px; left: 12px; background: rgba(15, 23, 42, 0.85); color: #FFF; padding: 4px 10px; border-radius: var(--radius-full); font-size: 11px; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(4px);">
+              <span class="status-dot-pulse" style="background: #34D399;"></span>
+              <span>Optimal Route via 100ft Rd • 1.2 km (12 mins)</span>
+            </div>
+          </div>
+
+          <!-- Navigation Button (Required by Part 3.2) -->
+          <div style="display: flex; gap: 10px;">
+            <button class="btn-primary" id="btn-start-navigation-from-modal" onclick="window.workerApp.openNavModal()" style="flex: 1;">
+              <i data-lucide="navigation" style="width: 16px; height: 16px;"></i>
+              <span>START GPS NAVIGATION</span>
+            </button>
+            <button class="btn-secondary" onclick="window.workerApp.closeModal('modal-customer-location')">
+              <span>Close</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==============================================================
+           MODAL 1: GPS NAVIGATION SIMULATION MODAL
+           ============================================================== -->
+      <div class="modal-overlay" id="modal-navigation">
+        <div class="bottom-drawer-modal">
+          <div class="modal-handle-bar"></div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--primary-blue-light); color: var(--primary-blue); display: flex; align-items: center; justify-content: center;">
+                <i data-lucide="navigation" style="width: 18px; height: 18px;"></i>
+              </div>
+              <div>
+                <h3 style="font-size: 16px; font-weight: 800;">Turn-by-Turn Navigation</h3>
+                <p style="font-size: 11px; color: var(--text-muted);">Destination: Indiranagar 100ft Rd</p>
+              </div>
+            </div>
+            <button class="back-btn" onclick="window.workerApp.closeModal('modal-navigation')">
+              <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+            </button>
+          </div>
+
+          <div style="background: #1E293B; color: #FFFFFF; border-radius: var(--radius-lg); padding: 18px; margin-bottom: 16px; position: relative;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+              <i data-lucide="corner-up-right" style="width: 28px; height: 28px; color: #60A5FA;"></i>
+              <div>
+                <span style="font-size: 11px; color: #94A3B8; text-transform: uppercase;">In 200 meters</span>
+                <h4 style="font-size: 16px; font-weight: 800;">Turn right onto 100 Feet Rd</h4>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+              <span style="font-size: 13px; font-weight: 700; color: #34D399;">ETA: 12 Mins • 1.2 km</span>
+              <span style="font-size: 12px; color: #94A3B8;">Customer: P. Vishnu Vardhan</span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <button class="btn-secondary" onclick="window.workerApp.callCustomer()">
+              <i data-lucide="phone" style="width: 14px; height: 14px; color: var(--primary-blue);"></i>
+              <span>Call Customer</span>
+            </button>
+            <button class="btn-success" onclick="window.workerApp.markArrived()">
+              <i data-lucide="map-pin" style="width: 14px; height: 14px;"></i>
+              <span>Mark Arrived</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==============================================================
+           MODAL 2: FORGOT PASSWORD MODAL
+           ============================================================== -->
+      <div class="modal-overlay" id="modal-forgot-pwd">
+        <div class="bottom-drawer-modal">
+          <div class="modal-handle-bar"></div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <h3 style="font-size: 16px; font-weight: 800;">Reset Worker Password</h3>
+            <button class="back-btn" onclick="window.workerApp.closeModal('modal-forgot-pwd')">
+              <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+            </button>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Enter your registered mobile number to receive a secure password reset OTP from your Sector Guild.</p>
+          <div class="form-group">
+            <label class="form-label">Registered Mobile Number</label>
+            <div class="input-with-icon">
+              <i data-lucide="phone"></i>
+              <input type="tel" class="form-input" id="forgot-mobile-input" value="9845040201">
+            </div>
+          </div>
+      <!-- ==============================================================
+           MODAL 3: INCOMING INSTANT REQUEST POPUP ("New Instant Job")
+           ============================================================== -->
+      <div class="modal-overlay" id="modal-incoming-instant">
+        <div class="bottom-drawer-modal">
+          <div class="modal-handle-bar"></div>
+          
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <div>
+              <span class="incoming-modal-badge instant">
+                <i data-lucide="zap" style="width: 14px; height: 14px;"></i>
+                New Instant Job
+              </span>
+              <h2 style="font-size: 18px; font-weight: 800; color: var(--text-main);" id="pop-instant-service">Plumbing Leakage & Pipe Repair</h2>
+            </div>
+            <span class="job-booking-id-tag" id="pop-instant-id">ID: #CP-9104</span>
+          </div>
+
+          <div class="job-details-block" style="margin-bottom: 16px;">
+            <div class="job-detail-line">
+              <span><i data-lucide="map-pin" style="width: 13px; height: 13px; vertical-align: middle;"></i> Customer Location:</span>
+              <strong style="color: var(--text-main);" id="pop-instant-loc">Indiranagar 100ft Rd, Bengaluru</strong>
+            </div>
+            <div class="job-detail-line">
+              <span><i data-lucide="navigation" style="width: 13px; height: 13px; vertical-align: middle;"></i> Distance:</span>
+              <strong style="color: var(--primary-blue);" id="pop-instant-dist">1.2 km away</strong>
+            </div>
+            <div class="job-detail-line">
+              <span><i data-lucide="clock" style="width: 13px; height: 13px; vertical-align: middle;"></i> Request Time:</span>
+              <strong style="color: var(--text-main);" id="pop-instant-time">Just Now (10:35 AM)</strong>
+            </div>
+            <div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border-light);">
+              <span style="font-size: 11px; color: var(--text-muted); display: block;">Problem:</span>
+              <p class="job-problem-desc" id="pop-instant-problem">Tap & Mixer Leak • High pressure joint failure under main washbasin.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <span style="font-size: 15px; font-weight: 800; color: var(--primary-green);">Payout: ₹348.00 Fixed</span>
+            <span style="font-size: 12px; color: var(--text-muted);">Customer: P. Vishnu Vardhan</span>
+          </div>
+
+          <div class="job-card-actions">
+            <button class="btn-primary" id="btn-modal-accept-instant" onclick="window.workerApp.acceptCurrentModal('INSTANT')">
+              <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>
+              <span>ACCEPT JOB</span>
+            </button>
+            <button class="btn-secondary" onclick="window.workerApp.closeModal('modal-incoming-instant')">
+              <span>REJECT</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==============================================================
+           MODAL 4: INCOMING PRE-BOOKING ("New Pre-Booking")
+           ============================================================== -->
+      <div class="modal-overlay" id="modal-incoming-prebook">
+        <div class="bottom-drawer-modal">
+          <div class="modal-handle-bar"></div>
+          
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <div>
+              <span class="incoming-modal-badge prebook">
+                <i data-lucide="calendar" style="width: 14px; height: 14px;"></i>
+                New Pre-Booking
+              </span>
+              <h2 style="font-size: 18px; font-weight: 800; color: var(--text-main);" id="pop-prebook-service">Pipe Leakage & Joint Sealing</h2>
+            </div>
+            <span class="job-booking-id-tag" id="pop-prebook-id">ID: #CP-9208</span>
+          </div>
+
+          <div class="job-details-block" style="margin-bottom: 16px;">
+            <div class="job-detail-line">
+              <span><i data-lucide="map-pin" style="width: 13px; height: 13px; vertical-align: middle;"></i> Customer Location:</span>
+              <strong style="color: var(--text-main);" id="pop-prebook-loc">Indiranagar 100ft Rd, Bengaluru</strong>
+            </div>
+            <div class="job-detail-line">
+              <span><i data-lucide="calendar-check" style="width: 13px; height: 13px; vertical-align: middle;"></i> Scheduled Date:</span>
+              <strong style="color: #4F46E5;" id="pop-prebook-date">Tomorrow (24 Sep)</strong>
+            </div>
+            <div class="job-detail-line">
+              <span><i data-lucide="clock" style="width: 13px; height: 13px; vertical-align: middle;"></i> Scheduled Time:</span>
+              <strong style="color: var(--text-main);" id="pop-prebook-time">11:30 AM – 01:30 PM</strong>
+            </div>
+            <div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border-light);">
+              <span style="font-size: 11px; color: var(--text-muted); display: block;">Problem:</span>
+              <p class="job-problem-desc" id="pop-prebook-problem">Concealed pipe joint seepage in bathroom wall requiring sealant injection.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <span style="font-size: 15px; font-weight: 800; color: var(--primary-green);">Payout: ₹399.00 Fixed</span>
+            <span style="font-size: 12px; color: var(--text-muted);">Customer: P. Vishnu Vardhan</span>
+          </div>
+
+          <div class="job-card-actions">
+            <button class="btn-primary" id="btn-modal-accept-prebook" style="background: linear-gradient(135deg, #4F46E5 0%, #1D4ED8 100%);" onclick="window.workerApp.acceptCurrentModal('PRE-BOOKING')">
+              <i data-lucide="check" style="width: 16px; height: 16px;"></i>
+              <span>ACCEPT</span>
+            </button>
+            <button class="btn-secondary" onclick="window.workerApp.closeModal('modal-incoming-prebook')">
+              <span>REJECT</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==============================================================
+           MODAL 5: INCOMING EMERGENCY REQUEST ("EMERGENCY JOB REQUEST")
+           ============================================================== -->
+      <div class="modal-overlay" id="modal-incoming-emergency">
+        <div class="bottom-drawer-modal" style="border-top: 4px solid var(--accent-red);">
+          <div class="modal-handle-bar"></div>
+          
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <div>
+              <span class="incoming-modal-badge emergency">
+                <i data-lucide="siren" style="width: 14px; height: 14px;"></i>
+                EMERGENCY JOB REQUEST
+              </span>
+              <h2 style="font-size: 18px; font-weight: 800; color: #991B1B;" id="pop-emergency-service">Major Pipe Burst / Ceilings Flood</h2>
+            </div>
+            <span class="job-booking-id-tag" style="background: #FEE2E2; color: var(--accent-red);" id="pop-emergency-id">ID: #SOS-5501</span>
+          </div>
+
+          <div class="job-details-block" style="background: #FFF1F2; border: 1.5px solid #FECACA; margin-bottom: 16px;">
+            <div class="job-detail-line">
+              <span><i data-lucide="map-pin" style="width: 13px; height: 13px; vertical-align: middle; color: var(--accent-red);"></i> Customer Location:</span>
+              <strong style="color: #991B1B;" id="pop-emergency-loc">Indiranagar 100ft Rd, Bengaluru</strong>
+            </div>
+            <div class="job-detail-line">
+              <span><i data-lucide="navigation" style="width: 13px; height: 13px; vertical-align: middle; color: var(--accent-red);"></i> Distance:</span>
+              <strong style="color: var(--accent-red);" id="pop-emergency-dist">1.1 km away</strong>
+            </div>
+            <div class="job-detail-line">
+              <span><i data-lucide="gauge" style="width: 13px; height: 13px; vertical-align: middle; color: var(--accent-red);"></i> Estimated Travel Distance:</span>
+              <strong style="color: #991B1B;" id="pop-emergency-travel">1.1 km (8–12 mins drive)</strong>
+            </div>
+            <div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed #FECACA;">
+              <span style="font-size: 11px; color: #991B1B; display: block; font-weight: 700;">Problem:</span>
+              <p class="job-problem-desc" style="color: #7F1D1D;" id="pop-emergency-problem">Main pipe connection fractured, flooding kitchen floor rapidly.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <span style="font-size: 16px; font-weight: 800; color: var(--primary-green);">Emergency Payout: ₹599.00</span>
+            <span style="font-size: 11px; color: var(--accent-red); font-weight: 800;">🚨 Rapid Arrival Required</span>
+          </div>
+
+          <div class="job-card-actions">
+            <button class="btn-danger" id="btn-modal-accept-emergency" onclick="window.workerApp.acceptCurrentModal('EMERGENCY')">
+              <i data-lucide="zap" style="width: 16px; height: 16px;"></i>
+              <span>ACCEPT EMERGENCY JOB</span>
+            </button>
+            <button class="btn-outline-danger" onclick="window.workerApp.closeModal('modal-incoming-emergency')">
+              <span>REJECT</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Worker Application JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
